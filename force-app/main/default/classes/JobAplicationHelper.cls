@@ -113,4 +113,4 @@ public with sharing class JobAplicationHelper {
         insert listOfTask;
         }           
     } 
-    } 
+} 
