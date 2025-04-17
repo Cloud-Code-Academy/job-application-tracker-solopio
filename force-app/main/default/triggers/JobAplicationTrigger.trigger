@@ -1,3 +1,8 @@
+// trigger JobAplicationTrigger on Job_Aplication__c (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
+    
+//         new JobApplicationTriggerHandler().run();
+// }
+
 trigger JobAplicationTrigger on Job_Aplication__c (before update, after update) {
     if(Trigger.isBefore && Trigger.isUpdate){
         for(Job_Aplication__c job : Trigger.new){
