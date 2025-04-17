@@ -13,10 +13,9 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler {
     }
 
     public override void afterInsert(){
-        //List<Task> listOfTask = new List<Task>();
         for (Job_Aplication__c job : this.newJobAplications) {
             if (job.Status__c == 'Saved') {      
-                //JobAplicationHelper.crateTasksForStatusSaved(this.newJobAplications);          
+                JobAplicationHelper.crateTasksForStatusSaved(this.newJobAplications);          
             } 
         }   
     }
@@ -48,23 +47,23 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler {
         }
     }
 
-    // public override void afterUpdate(){
-    //     List<Task> listOfTask = new List<Task>();
-    //     for (Job_Aplication__c job : this.newJobAplications) {
-    //         String oldStatus = this.oldJobAplicationMap.get(job.Id).Status__c;
-    //         if (job.Status__c != oldStatus && job.Status__c == 'Applying') {
-    //             JobAplicationHelper.crateTasksForStatusApplying(this.newJobAplications);
-    //         }else if(job.Status__c != oldStatus && job.Status__c == 'Applied'){
-    //             JobAplicationHelper.crateTasksForStatusApplied(this.newJobAplications);
-    //         }else if(job.Status__c != oldStatus && job.Status__c == 'Interviewing'){
-    //             JobAplicationHelper.crateTasksForStatusInterviewing(this.newJobAplications);
-    //         }else if(job.Status__c != oldStatus && job.Status__c == 'Negotiating'){
-    //             JobAplicationHelper.crateTasksForStatusNegotiating(this.newJobAplications);
-    //         }else if(job.Status__c != oldStatus && job.Status__c == 'Accepted'){
-    //             JobAplicationHelper.crateTasksForStatusAccepted(this.newJobAplications);
-    //         }else if(job.Status__c != oldStatus && job.Status__c == 'Closed'){
-    //             JobAplicationHelper.crateTasksForStatusClosed(this.newJobAplications);
-    //         }
-    //     }
-    // }
+    public override void afterUpdate(){
+        List<Task> listOfTask = new List<Task>();
+        for (Job_Aplication__c job : this.newJobAplications) {
+            String oldStatus = this.oldJobAplicationMap.get(job.Id).Status__c;
+            if (job.Status__c != oldStatus && job.Status__c == 'Applying') {
+                JobAplicationHelper.crateTasksForStatusApplying(this.newJobAplications);
+            }else if(job.Status__c != oldStatus && job.Status__c == 'Applied'){
+                JobAplicationHelper.crateTasksForStatusApplied(this.newJobAplications);
+            }else if(job.Status__c != oldStatus && job.Status__c == 'Interviewing'){
+                JobAplicationHelper.crateTasksForStatusInterviewing(this.newJobAplications);
+            }else if(job.Status__c != oldStatus && job.Status__c == 'Negotiating'){
+                JobAplicationHelper.crateTasksForStatusNegotiating(this.newJobAplications);
+            }else if(job.Status__c != oldStatus && job.Status__c == 'Accepted'){
+                JobAplicationHelper.crateTasksForStatusAccepted(this.newJobAplications);
+            }else if(job.Status__c != oldStatus && job.Status__c == 'Closed'){
+                JobAplicationHelper.crateTasksForStatusClosed(this.newJobAplications);
+            }
+        }
+    }
 }
