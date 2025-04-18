@@ -11,7 +11,7 @@ public with sharing class JobAppAutomationStatusForTasksTest {
         Test.stopTest();
 
         List<Task> listTasks = [SELECT Id, Subject, Status, Priority, WhatId FROM Task WHERE WhatId =: job.id]; 
-        Assert.areEqual(3, listTasks.size());
+        Assert.areEqual(3, listTasks.size(), 'There should be 3 tasks');
     }   
     
     @Istest
@@ -27,6 +27,6 @@ public with sharing class JobAppAutomationStatusForTasksTest {
         Test.stopTest();
 
         List<Task> listTasks = [SELECT Id, Subject, Status, Priority, WhatId FROM Task WHERE WhatId =: job.id]; 
-        Assert.areEqual(8, listTasks.size());
+        Assert.areEqual(8, listTasks.size(), 'There should be 8 tasks');
     }  
 }
