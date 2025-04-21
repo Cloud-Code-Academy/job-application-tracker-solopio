@@ -17,7 +17,7 @@ public with sharing class InterviewTriggerHandler extends TriggerHandler{
             if (interview.Job_Aplication__c != null) {
             InterviewHelper.createEvent(this.newInterviewes);
             }
-            //check what is a day
+            //Check what day it is
             InterviewHelper.checkIfDataIsSundayOrSatrday(interview);  
         }
     }
@@ -30,7 +30,7 @@ public with sharing class InterviewTriggerHandler extends TriggerHandler{
             FROM Event
             WHERE WhatId = : interview.Job_Aplication__c
             LIMIT 1];
-            //check what is a day
+            //Check what day it is.
             InterviewHelper.checkIfDataIsSundayOrSatrday(interview); 
             if (interview.Job_Aplication__c != null) {
                 if (!existingEvent.isEmpty()){

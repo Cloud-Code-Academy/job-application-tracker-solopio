@@ -41,18 +41,15 @@ public with sharing class InterviewHelper {
     
         if (isOverlap) {
             System.debug('The new time interval overlaps with an existing event.');
-            // Add the error to the interview record to prevent its creation
             interviewRecord.addError('The new time interval overlaps with an existing event.');
             return true;
         } else {
             System.debug('The new time interval does not overlap with any existing event.');
-            return false; // Indicate that there was no overlap
+            return false;
         }
     }
     
     public static Boolean doesItOverlap(DateTime start1, DateTime end1, DateTime start2, DateTime end2) {
-        // Two time intervals overlap if and only if:
-        // (Start of interval 1 is before the end of interval 2) AND (End of interval 1 is after the start of interval 2)
         return start1 < end2 && end1 > start2;
     }
 
