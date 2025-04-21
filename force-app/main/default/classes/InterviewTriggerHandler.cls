@@ -1,4 +1,4 @@
-public with sharing class InterviewTriggerHandler extends TriggerHandler {
+public with sharing class InterviewTriggerHandler extends TriggerHandler{
 
     private List <Interview__c> newInterviewes;
     private Map <Id, Interview__c> newInterviewMap;
@@ -15,31 +15,36 @@ public with sharing class InterviewTriggerHandler extends TriggerHandler {
     public override void afterInsert(){
         for(Interview__c interview : this.newInterviewes){
             if (interview.Job_Aplication__c != null) {
-                Event event = new Event(StartDateTime = interview.Date_Of_Interview__c, EndDateTime = interview.Date_Of_Interview__c.addHours(2),
-                WhatId = interview.Job_Aplication__c, Subject = 'Interview '+ interview.Name);
-            insert event;
+            InterviewHelper.createEvent(this.newInterviewes);
             }
+            //check what is a day
+            InterviewHelper.checkIfDataIsSundayOrSatrday(interview);  
         }
     }
 
     public override void afterUpdate(){
+        List<Event>eventsToUdate = new List <Event>();
+        Boolean result = false;
         for(Interview__c interview : this.newInterviewes){
+            List<Event> existingEvent = [SELECT Id, StartDateTime, EndDateTime, Subject
+            FROM Event
+            WHERE WhatId = : interview.Job_Aplication__c
+            LIMIT 1];
+            //check what is a day
+            InterviewHelper.checkIfDataIsSundayOrSatrday(interview); 
             if (interview.Job_Aplication__c != null) {
-                // Query for the existing Event related to this Job Application
-                List<Event> existingEvents = [SELECT Id, StartDateTime, EndDateTime, Subject
-                                              FROM Event
-                                              WHERE WhatId = :interview.Job_Aplication__c
-                                              LIMIT 1];
-    
-                if (!existingEvents.isEmpty()) {
-                    Event eventToUpdate = existingEvents[0];
+                if (!existingEvent.isEmpty()){
+                    Event eventToUpdate = existingEvent[0];
                     eventToUpdate.StartDateTime = interview.Date_Of_Interview__c;
-                    eventToUpdate.EndDateTime = interview.Date_Of_Interview__c.addHours(2);
-                    eventToUpdate.Subject = 'Interview ' + interview.Name;
-                    update eventToUpdate;
-                } 
+                    eventToUpdate.EndDateTime = interview.Date_Of_Interview__c.addHours(2);  
+                    eventsToUdate.add(eventToUpdate);
+                            //check if there is an overlap
+                    result = InterviewHelper.doEventsOverlaping(eventToUpdate, interview);
+                }
             }
         }
+            if (result == false){
+               update eventsToUdate;
+            }  
     }
 }
-    

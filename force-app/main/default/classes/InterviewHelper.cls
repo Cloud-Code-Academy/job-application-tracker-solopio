@@ -43,7 +43,7 @@ public with sharing class InterviewHelper {
             System.debug('The new time interval overlaps with an existing event.');
             // Add the error to the interview record to prevent its creation
             interviewRecord.addError('The new time interval overlaps with an existing event.');
-            return true; // Indicate that there was an overlap
+            return true;
         } else {
             System.debug('The new time interval does not overlap with any existing event.');
             return false; // Indicate that there was no overlap
@@ -54,5 +54,13 @@ public with sharing class InterviewHelper {
         // Two time intervals overlap if and only if:
         // (Start of interval 1 is before the end of interval 2) AND (End of interval 1 is after the start of interval 2)
         return start1 < end2 && end1 > start2;
+    }
+
+       public static void checkIfDataIsSundayOrSatrday(Interview__c interview){
+        Datetime dt = (DateTime)interview.Date_Of_Interview__c;
+        String dayOfWeek = dt.format('EEEE');
+        if (dayOfWeek == 'Sunday' || dayOfWeek == 'Saturday'){
+            interview.addError('You cannot create an interview on the weekend');    
+    }
     }
 }
