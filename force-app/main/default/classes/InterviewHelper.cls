@@ -60,4 +60,33 @@ public with sharing class InterviewHelper {
             interview.addError('You cannot create an interview on the weekend');    
     }
     }
+
+    public static void remindOwnerOfTomorrowInterviews(List<Interview__c> interviews) {
+        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+        Set<Id> ownerIds = new Set<Id>();
+        for(Interview__c interview : interviews){
+            if (interview.Job_Aplication__c != null) {
+                ownerIds.add(interview.Job_Aplication__r.OwnerId); // Access the OwnerId via the relationship
+            }
+        }
+        Map<Id, User> ownersEmailMap = new Map<Id, User>([SELECT Id, Email FROM User WHERE Id IN :ownerIds]);
+        for (Interview__c interview : interviews){
+            if (interview.Job_Aplication__c != null && ownersEmailMap.containsKey(interview.Job_Aplication__r.OwnerId)) {
+                User owner = ownersEmailMap.get(interview.Job_Aplication__r.OwnerId);
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                String[] toAddresses = new String[] {owner.Email};
+                mail.setToAddresses(toAddresses);
+                mail.setSubject('You have an Interview Tomorrow: ' + interview.Name);
+                mail.setPlainTextBody('Your Job Interview: ' + interview.Name +' is tomorrow at '+ interview.Date_Of_Interview__c+'.');
+                mails.add(mail);
+            }
+        }
+    
+        try {
+            Messaging.sendEmail(mails);
+        } catch (Exception e){
+            System.debug('Exception: ' + e.getMessage());
+        }
+    }
+
 }
