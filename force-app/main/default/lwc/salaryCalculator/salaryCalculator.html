@@ -1,0 +1,22 @@
+<template>
+    <lightning-card  title="Calculate your take-home salary">
+        <lightning-button variant="brand" label="Calculate" title="Calculate" slot="actions" onclick={handleClick}></lightning-button> 
+        <p class="slds-p-horizontal_small">Calculate your netto salary</p>
+       <lightning-select
+            name="tax_settlement"
+            label="Choose your tax settlement status "
+            value={value}
+            options={options}
+            onchange={handleChange}
+            required ></lightning-select>
+
+         <p>Selected tax settlement status: {value}</p>
+
+         <div class="slds-p-around_medium lgc-bg">
+            <lightning-input type="number" label="Enter salary" placeholder="Enter annual gross income" value ={grossSalary} onchange={handleChangeSalary}></lightning-input>
+        </div>
+
+    <p slot="footer">Yor salary netto without social_Security and medicare1 is {nettoSalary},
+    taxes_owed is {taxes_owed}, your taxable income is {taxable_income} your TAX rate is {rate} and Standard deduction is {standard_deduction}.</p>
+   </lightning-card>
+</template>
