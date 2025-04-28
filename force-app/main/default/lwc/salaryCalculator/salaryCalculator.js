@@ -1,17 +1,14 @@
 import { LightningElement, track} from 'lwc';
-
-const social_Security = 6.2;
-const medicare1 = 1.45;
-const medicare2 = 2.35;
-
 export default class SalaryCalculator extends LightningElement {
-    
+
+    social_Security = 6.2;
+    medicare1 = 1.45;
+    //const medicare2 = 2.35;
     value = '';
     tax_settlement = '';
     taxable_income = '';
     taxes_owed = '';
     @ track grossSalary = '';
-    //grossSalary = '';
     nettoSalary = '';
     standard_deduction = '';
     rate = '';
@@ -58,43 +55,40 @@ export default class SalaryCalculator extends LightningElement {
     handleClick(){
         if (this.grossSalary === '' || this.grossSalary === null) {
             alert('Please enter your gross salary');
+            return;
         }
     
         if (this.grossSalary !== '' && this.tax_settlement === 'Single') {
             this.calculateRateWhenSingle(this.grossSalary);
-            //this.calculateRateWhenSingle();
             console.log('this.grossSalary =' + this.grossSalary);
             console.log('your rate is ' + this.rate);
-            this.taxable_income = (this.grossSalary - this.standard_deduction);
-            this.taxes_owed = (this.taxable_income * this.rate);
-            this.nettoSalary = this.grossSalary - this.taxes_owed;
-            // const social_Security = 6.2;
-            // const medicare1 = 1.45;
             console.log('category of tax should by Single'+ this.tax_settlement);
             console.log('this.grossSalary =' + this.grossSalary);
-            console.log('taxes_owed =' +  taxes_owed);
             console.log('standard_deduction =' + this.standard_deduction);
-            console.log('netto salary without social_Security & medicare1=' + this.nettoSalary);
         } else if (this.grossSalary !== '' && this.tax_settlement === 'Head_of_hausehold') {
             this.calculateRateWhenHead(this.grossSalary);
-            this.taxable_income = (this.grossSalary - this.standard_deduction);
-            this.taxes_owed = (this.taxable_income * this.rate);
-            this.nettoSalary = this.grossSalary - this.taxes_owed;;
         } else if (this.grossSalary !== '' && this.tax_settlement === 'Married_Filing_Jontly') {
             this.calculateRateWhenMarried_Jontly(this.grossSalary);
-            this.taxable_income = (this.grossSalary - this.standard_deduction);
-            this.taxes_owed = (this.taxable_income * this.rate);
-            this.nettoSalary = this.grossSalary - this.taxes_owed;
         } else if (this.grossSalary !== '' && this.tax_settlement === 'Married_Filing_Separetly') {
             this.calculateRateWhenMarried_Separetly(this.grossSalary);
+        }
+        
+        if (this.grossSalary !== '') {
             this.taxable_income = (this.grossSalary - this.standard_deduction);
             this.taxes_owed = (this.taxable_income * this.rate);
+            this.calculateSocialSecurity(this.grossSalary);
+            this.calculateMedicare1(this.grossSalary);
             this.nettoSalary = this.grossSalary - this.taxes_owed;
+    
+            console.log('taxes_owed =' + this.taxes_owed);
+            console.log('netto salary without social_Security & medicare1=' + this.nettoSalary);
+
+            this.finalNettoSalary = this.nettoSalary - this.socialSecurityValue - this.medicareValue;
+            console.log('final netto salary =' + this.finalNettoSalary);
         }
     }
 
     calculateRateWhenSingle(grossSalary){
-    //calculateRateWhenSingle(){
         if(this.grossSalary <= 0 && this.grossSalary < 11925){
             this.rate = 0.1 ;
         }else if(this.grossSalary >= 11925 && this.grossSalary < 48475){
@@ -162,4 +156,17 @@ export default class SalaryCalculator extends LightningElement {
         }else if(this.grossSalary >= 365600){
             this.rate = 0.37;}
     }
+
+    calculateSocialSecurity(grossSalary){
+        let taxableSalary = grossSalary; // Używamy argumentu przekazanego do funkcji
+        if(taxableSalary > this.wageBaseLimit){
+            taxableSalary = 176100;
+        }
+        this.socialSecurityValue = taxableSalary * this.social_Security / 100;
+    }
+    
+    calculateMedicare1(grossSalary){ 
+            this.medicareValue = this.grossSalary * this.medicare1 /100;
+    }
+
 }

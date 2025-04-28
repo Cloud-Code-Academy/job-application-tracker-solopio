@@ -16,7 +16,8 @@
             <lightning-input type="number" label="Enter salary" placeholder="Enter annual gross income" value ={grossSalary} onchange={handleChangeSalary}></lightning-input>
         </div>
 
-    <p slot="footer">Yor salary netto without social_Security and medicare1 is {nettoSalary},
-    taxes_owed is {taxes_owed}, your taxable income is {taxable_income} your TAX rate is {rate} and Standard deduction is {standard_deduction}.</p>
+        <p slot="footer">Yor salary netto without social_Security and medicare1 is {nettoSalary},
+            taxes_owed is {taxes_owed}, your taxable income is {taxable_income} your TAX rate is {rate} and Standard deduction is {standard_deduction}.
+            Social security is {socialSecurityValue}, medicare tax value is {medicareValue}, the final netto is {finalNettoSalary}</p>
    </lightning-card>
 </template>
