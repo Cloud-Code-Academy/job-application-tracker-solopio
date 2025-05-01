@@ -1,6 +1,7 @@
 public with sharing class JoobleJSONCallout {
-   
-    public  void getJobFromJOOBLE() {
+
+	@future(callout=true)
+    public static void getJobFromJOOBLE() {
 		// Create HTTP request to send.               
 		HttpRequest req = new HttpRequest();
 
@@ -8,7 +9,7 @@ public with sharing class JoobleJSONCallout {
 		// Set the HTTP method to POST.
 		req.setMethod('POST');
 		req.setHeader('Content-Type', 'application/json;charset=UTF-8');
-		req.setBody('{"location" : "Miami, Florida",  "keywords" : "Apothecarie"}');
+		req.setBody('{"location" : "Miami, Florida",  "keywords" : "Wix"}');
 		// Send the HTTP request and get the response.
 		Http http = new Http();
 		HTTPResponse res = http.send(req);
