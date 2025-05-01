@@ -5,9 +5,8 @@ public with sharing class JoobleJSONCallout {
 		HttpRequest req = new HttpRequest();
 
         req.setEndpoint('https://jooble.org/api/'+'8448854a-717f-4293-8657-1b1e2e4e3868');
-		// Set the HTTP method to GET.
+		// Set the HTTP method to POST.
 		req.setMethod('POST');
-		//tu rzeczy właściwe do metody POST
 		req.setHeader('Content-Type', 'application/json;charset=UTF-8');
 		req.setBody('{"location" : "Miami, Florida",  "keywords" : "Apothecarie"}');
 		// Send the HTTP request and get the response.
@@ -21,9 +20,8 @@ public with sharing class JoobleJSONCallout {
 		List <Job_Aplication__c> listOfAPP = new List <Job_Aplication__c>();
 		if (res.getStatusCode() == 200) {
             listOfAPP = createJobAppFromJson(jsonResponse);
-			//insert/update from the JSON response using the external id (dummyUserId)
-			insert listOfAPP; 
-            //upsert job Job_Aplication_c__c; 
+			//insert/update from the JSON response using the external id (Jooble_Application__c)
+			upsert listOfAPP Jooble_Application__c;  
         } else {
             // If the status code is not 200, something went wrong with the request
             System.debug('HTTP request failed. Status code: ' + res.getStatusCode());
@@ -37,26 +35,20 @@ public with sharing class JoobleJSONCallout {
 		List <Job_Aplication__c> liostOfJObs = new List<Job_Aplication__c>();
 		Map<String, Object> parsedResponse = (Map<String, Object>) JSON.deserializeUntyped(jsonResponse);
 
-//https://www.youtube.com/watch?v=subi8zaSQ9g
-
 		List<Object> jobs = (List<Object>) parsedResponse.get('jobs');
 		for(Object job: jobs) {
 			Map<String, Object> jobMap = (Map<String, Object>) job;
 		Job_Aplication__c aplication = new  Job_Aplication__c();
-		// Set the contact fields from the JSON response.
         aplication.Company_Name__c = (String)jobMap.get('company');
-        //aplication.Job_title__c = (String)parsedResponse.get('title');jobMap.get
 		aplication.Job_title__c = (String)jobMap.get('title');
-		aplication.Jooble_Application__c = String.valueOf(jobMap.get('id')); 
-        //job.Job_Aplication_c__c = (Integer)(parsedResponse.get('id')); 
+		aplication.Jooble_Application__c = String.valueOf(jobMap.get('id'));  
 		aplication.Salary__c = (Integer)jobMap.get('Salary');
 		aplication.Status__c = 'Saved';
 		aplication.Location__c = (String) jobMap.get('location');
 		aplication.URL__c = (String) jobMap.get('link');
-		//aplication.Notes__c = (String) jobMap.get('snippet');
+		aplication.Description__c = (String) jobMap.get('snippet');
 		liostOfJObs.add(aplication);
 		}
 		return liostOfJObs;
 	    }
-
 	}
