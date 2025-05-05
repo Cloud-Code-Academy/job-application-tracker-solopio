@@ -1,7 +1,8 @@
 public with sharing class JoobleJSONCallout {
 
 	@future(callout=true)
-    public static void getJobFromJOOBLE() {
+    public static void getJobFromJOOBLE(){
+	
 		// Create HTTP request to send.               
 		HttpRequest req = new HttpRequest();
 
